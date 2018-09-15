@@ -12,12 +12,12 @@ headers = {
     'accept-encoding': 'gzip, deflate, br',
     'accept-language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7,zh-TW;q=0.6',
     'cache-control': 'max-age=0',
-    'cookie': 'OGPC=19007661-2:; SID=dwai4elTa93FwGVTPy9glgQcqd712ajrijlrvvn0dgrMoT5XSRLClAzZalxisMWIHn6bag.; HSID=A3sFM7e8kC0_2WB11; SSID=AJqvPGkS5KxAqFs3q; APISID=Mt_2moWRzFa0FFep/AZoHaqve_xwOP2ifB; SAPISID=MWL_o3JPid4O13Ah/AwIkid35gPuths_xi; NID=138=PFivqy-GmeIG6a6FXQkGOo4ImnyY8w_CkvuiZmcTTX1vmgICxTAFfGjPRJNM3ge-FgYu6WiffFYREf_xRI94JymD_KmE5rV4TFsabSwhbBaRo0HpoFE-JafsNOHwIPqt2EkHroWl2-x_GIGZWHkzBQ20wiqJP0qef6dETl-rHio_5nA5ZxaqaqI20CL87iVSgPtZbM6RxzMNrk67xQWJTozSlivQKjLdveDhnnprTDkULnRsbcFCiOneKvLgBm-llopZWwHmy11vDuJ2ZF9Ij04wat2QieX3qgNAbki2sRtHAMvlNHyfIKB708S_50gRtMpKxUptY8iLKb8; GSP=A=67UEEQ:CPTS=1536670362:LM=1536670362:S=8E86Swn3kTDxK206; 1P_JAR=2018-9-11-13',
     'dnt': '1',
-    'referer': 'https://scholar.google.com.au/scholar?hl=en&as_sdt=0%2C5&q=Awarding+Price%2C+Contract+Performance%2C+and+Bids+Screening%3A+Evidence+from+Procurement+Auctions&btnG=',
+    # 'referer': 'https://scholar.google.com.au/scholar?hl=en&as_sdt=0%2C5&q=Awarding+Price%2C+Contract+Performance%2C+and+Bids+Screening%3A+Evidence+from+Procurement+Auctions&btnG=',
     'upgrade-insecure-requests': '1',
-    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36',
-    'x-client-data': 'CIq2yQEIo7bJAQjBtskBCKmdygEIsp3KAQjXncoBCNqdygEIqKPKAQifp8oBGIOYygE=',
+    # 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:63.0) Gecko/20100101 Firefox/63.0',
+    # 'x-client-data': 'CIq2yQEIo7bJAQjBtskBCKmdygEIsp3KAQjXncoBCNqdygEIqKPKAQifp8oBGIOYygE=',
 }
 
 url_pre = 'https://scholar.google.com.au/scholar?hl=en&as_sdt=0%2C5&q='
