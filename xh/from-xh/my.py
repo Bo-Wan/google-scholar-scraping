@@ -72,4 +72,3 @@ with open('citation.csv', newline='') as csvfile:
             print("no match (-1)")
             getnewProxies()
             print('没有')
-

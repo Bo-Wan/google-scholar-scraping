@@ -54,7 +54,6 @@ cursor = conn.cursor()
 # result = cursor.execute(query)
 # print(result)
 
-firstline = True
 with open('citation.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
 
