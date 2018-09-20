@@ -16,11 +16,13 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:63.0) Gecko/20100101 Firefox/63.0',
 }
 
-proxy_ip = '13.58.94.178'
-starting_pos = 887
-http_proxy = 'http://' + proxy_ip + ':8889'
-print('http_proxy = ' + http_proxy)
-print('starting_pos = ' + str(starting_pos))
+previous_pos = 950
+ending_pos = 99999
+# proxy_ip = '13.58.94.178'
+# http_proxy = 'http://' + proxy_ip + ':8889'
+# print('http_proxy = ' + http_proxy)
+print('previous_pos = ' + str(previous_pos))
+print('ending_pos = ' + str(ending_pos))
 
 
 url_pre = 'https://scholar.google.com.au/scholar?hl=en&as_sdt=0%2C5&q='
@@ -48,8 +50,11 @@ with open('citation.csv', newline='') as csvfile:
     # Skip first line
     next(spamreader)
     for row in spamreader:
-        if int(row[0]) <= starting_pos:
+        if int(row[0]) <= previous_pos:
             continue
+
+        if int(row[0]) >= ending_pos:
+            break
 
         # Main logic
         id = row[0]
@@ -65,8 +70,8 @@ with open('citation.csv', newline='') as csvfile:
         url = url_pre + url_key + url_post
         print("Parsed URL: " + url)
 
-        # r = requests.get(url, headers)
-        r = requests.get(url,headers=headers,proxies = {'http': http_proxy},verify=False)
+        r = requests.get(url, headers)
+        # r = requests.get(url,headers=headers,proxies = {'http': http_proxy},verify=False)
 
         print("Http status: " + str(r.status_code))
         http_code = r.status_code

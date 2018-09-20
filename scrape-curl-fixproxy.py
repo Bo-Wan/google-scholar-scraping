@@ -9,11 +9,11 @@ import subprocess
 # from subprocess import call
 
 # Exclusive!
-previous_pos = 778
+previous_pos = 996
 sleep_interval = 1.5
 max_attempt = 10
 
-proxy = ''
+proxy = 'http://18.217.253.111:8889'
 url_pre = 'https://scholar.google.com.au/scholar?hl=en&as_sdt=0%2C5&q='
 url_post = '&btnG='
 proxy_count = 0
@@ -22,23 +22,6 @@ proxy_count = 0
 conn = pymysql.connect(host='localhost', user='root', database='citation', autocommit=True)
 cursor = conn.cursor()
 
-def getnewProxy():
-    global proxy
-    global proxy_count
-    proxy_count += 1
-    print("current proxy_count: " + str(proxy_count))
-
-    r = requests.get('https://gimmeproxy.com/api/getProxy')
-    proxyResult = r.json()
-    type = proxyResult['type']
-    if type != 'http':
-        getnewProxy()
-    else:
-        proxy = proxyResult['curl']
-        print('New proxy get: ' + proxy)
-
-
-getnewProxy()
 with open('citation.csv', newline='') as csvfile:
     csv_lines = csv.reader(csvfile, delimiter=',', quotechar='"')
 
@@ -109,8 +92,8 @@ with open('citation.csv', newline='') as csvfile:
                     break
 
             if attempt_fail:
-                getnewProxy()
-                continue
+                print('failed to get curl result: timeout')
+                exit()
 
             # Read
             f = open('test.html', 'r')
@@ -132,8 +115,8 @@ with open('citation.csv', newline='') as csvfile:
             else:
                 citation = -1
                 print('no match (-1).')
-                print('Running with new proxy')
-                getnewProxy()
+                print(html)
+                exit()
 
         #     # debug - start
         #     success = True;
