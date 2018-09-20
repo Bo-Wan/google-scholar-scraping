@@ -16,7 +16,7 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:63.0) Gecko/20100101 Firefox/63.0',
 }
 
-previous_pos = 950
+previous_pos = 1211
 ending_pos = 99999
 # proxy_ip = '13.58.94.178'
 # http_proxy = 'http://' + proxy_ip + ':8889'

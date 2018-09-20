@@ -13,7 +13,8 @@ previous_pos = 996
 sleep_interval = 1.5
 max_attempt = 10
 
-proxy = 'http://18.217.253.111:8889'
+proxy_ip = '18.224.74.173'
+proxy = 'http://' + proxy_ip + ':8889'
 url_pre = 'https://scholar.google.com.au/scholar?hl=en&as_sdt=0%2C5&q='
 url_post = '&btnG='
 proxy_count = 0
