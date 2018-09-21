@@ -9,15 +9,18 @@ import subprocess
 # from subprocess import call
 
 # Exclusive!
-previous_pos = 1211
+previous_pos = 4229
 sleep_interval = 1
-max_attempt = 15
+max_attempt = 10
 
 proxy = ''
 url_pre = 'https://scholar.google.com.au/scholar?hl=en&as_sdt=0%2C5&q='
 url_post = '&btnG='
 proxy_count = 0
 proxy_life = 5
+
+no_citation_key = 'Sort by relevance'
+
 
 # Get Mariadb cursor
 conn = pymysql.connect(host='localhost', user='root', database='citation', autocommit=True)
@@ -60,6 +63,7 @@ with open('citation.csv', newline='') as csvfile:
         title = row[3]
         author = row[4]
 
+        dataFileName = 'html-data/' + id + '.html'
         success = False
 
         # Proxy + cURL until gets citation
@@ -76,10 +80,13 @@ with open('citation.csv', newline='') as csvfile:
             # print("old file: " + f.read())
             # f.close()
 
-            # Erase test.html
-            f = open('test.html', 'w')
-            f.close()
-
+            # Try to Erase test.html
+            try:
+                f = open(dataFileName, 'w')
+                f.close()
+                print('Cleaned existing data file')
+            except:
+                print('No existing data file')
             # # debug 2
             # f = open('test.html', 'r')
             # print("erased file: " + f.read())
@@ -87,7 +94,7 @@ with open('citation.csv', newline='') as csvfile:
 
 
             # cURL
-            handle = open('test.html', 'w')
+            handle = open(dataFileName, 'w')
             curl_command = "curl '" + url + "' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:63.0) Gecko/20100101 Firefox/63.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' --compressed -H 'Connection: keep-alive' -H 'Upgrade-Insecure-Requests: 1' -H 'Cache-Control: max-age=0' -H 'TE: Trailers' --proxy " + proxy
             print('curl comnad is: ' + curl_command)
             out = subprocess.Popen(curl_command, shell=True, stdout=handle)
@@ -107,7 +114,7 @@ with open('citation.csv', newline='') as csvfile:
             attempt_fail = False
             while not html_done:
                 sleep(sleep_interval)
-                line_new = sum(1 for line in open('test.html'))
+                line_new = sum(1 for line in open(dataFileName))
 
                 # debug 3
                 print('Line count: ' + str(line_new))
@@ -126,7 +133,7 @@ with open('citation.csv', newline='') as csvfile:
                 continue
 
             # Read
-            f = open('test.html', 'r')
+            f = open(dataFileName, 'r')
             html = f.read()
             f.close()
 
@@ -146,8 +153,18 @@ with open('citation.csv', newline='') as csvfile:
                 citation = -1
                 print('no match (-1).')
                 print('html: ' + html)
-                print('Running with new proxy')
-                getnewProxy()
+
+                # Check if this is nocitation article
+                no_citation_key_index = html.find(no_citation_key)
+                if no_citation_key_index == -1:
+                    print('nocitation key not found too. Running with new proxy')
+                    getnewProxy()
+                else:
+                    print('This article has no citation. Go next')
+                    success = True
+                    citation = 0
+
+
 
         #     # debug - start
         #     success = True;

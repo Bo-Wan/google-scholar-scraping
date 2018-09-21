@@ -8,3 +8,8 @@ curl 'https://scholar.google.com.au/scholar?hl=en&as_sdt=0%2C5&q=Physician+Payme
 # No citation
 360
 363
+1708
+3867
+4206
+4214
+4221
