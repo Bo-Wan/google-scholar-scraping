@@ -9,7 +9,7 @@ import subprocess
 # from subprocess import call
 
 # Exclusive!
-previous_pos = 4229
+previous_pos = 11141
 sleep_interval = 1
 max_attempt = 10
 
@@ -36,13 +36,17 @@ def getnewProxy():
     # r = requests.get('https://gimmeproxy.com/api/getProxy?protocol=http&country=AU&websites=google&api_key=539aad0a-f164-4b9c-96e2-98eec91dbac3')
     r = requests.get('https://gimmeproxy.com/api/getProxy?protocol=http&api_key=539aad0a-f164-4b9c-96e2-98eec91dbac3')
 
-    proxyResult = r.json()
-    type = proxyResult['type']
-    if type != 'http':
+    try:
+        proxyResult = r.json()
+        type = proxyResult['type']
+        if type != 'http':
+            getnewProxy()
+        else:
+            proxy = proxyResult['curl']
+            print('New proxy get: ' + proxy)
+    except:
         getnewProxy()
-    else:
-        proxy = proxyResult['curl']
-        print('New proxy get: ' + proxy)
+
 
 
 getnewProxy()
