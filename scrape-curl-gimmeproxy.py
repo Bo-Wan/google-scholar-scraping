@@ -7,9 +7,10 @@ import pymysql
 from time import sleep
 import subprocess
 # from subprocess import call
+from time import strftime
 
 # Exclusive!
-previous_pos = 11141
+previous_pos = 38259
 sleep_interval = 1
 max_attempt = 10
 
@@ -19,8 +20,11 @@ url_post = '&btnG='
 proxy_count = 0
 proxy_life = 5
 
-no_citation_key = 'Sort by relevance'
+no_citation_key1 = 'Sort by relevance'
+no_citation_key2 = 'Sort by date'
+no_citation_key3 = 'Since 2018'
 
+robot_key1 = 'Please show you&#39;re not a robot'
 
 # Get Mariadb cursor
 conn = pymysql.connect(host='localhost', user='root', database='citation', autocommit=True)
@@ -32,11 +36,12 @@ def getnewProxy():
     proxy_count += 1
     print("current proxy_count: " + str(proxy_count))
 
-    # r = requests.get('https://gimmeproxy.com/api/getProxy')
-    # r = requests.get('https://gimmeproxy.com/api/getProxy?protocol=http&country=AU&websites=google&api_key=539aad0a-f164-4b9c-96e2-98eec91dbac3')
-    r = requests.get('https://gimmeproxy.com/api/getProxy?protocol=http&api_key=539aad0a-f164-4b9c-96e2-98eec91dbac3')
 
     try:
+        # r = requests.get('https://gimmeproxy.com/api/getProxy')
+        # r = requests.get('https://gimmeproxy.com/api/getProxy?protocol=http&country=AU&websites=google&api_key=539aad0a-f164-4b9c-96e2-98eec91dbac3')
+        r = requests.get('https://gimmeproxy.com/api/getProxy?protocol=http&api_key=539aad0a-f164-4b9c-96e2-98eec91dbac3')
+
         proxyResult = r.json()
         type = proxyResult['type']
         if type != 'http':
@@ -72,30 +77,21 @@ with open('citation.csv', newline='') as csvfile:
 
         # Proxy + cURL until gets citation
         while not success:
-            print("Processing id: [" + id + "], title: [" + title + "]")
+            print(strftime("%Y-%m-%d %H:%M:%S"))
+            print("Processing id: [" + id + "], title: [" + title + "]" )
 
             parsedKey = urllib.parse.quote(title)
             url_key = parsedKey.replace("%20", "+")
             url = url_pre + url_key + url_post
             print("Parsed URL: " + url)
 
-            # # debug 1
-            # f = open('test.html', 'r')
-            # print("old file: " + f.read())
-            # f.close()
-
-            # Try to Erase test.html
+            # Try to Erase existing data file
             try:
                 f = open(dataFileName, 'w')
                 f.close()
                 print('Cleaned existing data file')
             except:
                 print('No existing data file')
-            # # debug 2
-            # f = open('test.html', 'r')
-            # print("erased file: " + f.read())
-            # f.close()
-
 
             # cURL
             handle = open(dataFileName, 'w')
@@ -103,7 +99,7 @@ with open('citation.csv', newline='') as csvfile:
             print('curl comnad is: ' + curl_command)
             out = subprocess.Popen(curl_command, shell=True, stdout=handle)
 
-            # Proxy life
+            # Proxy recycling
             proxy_use += 1
             print('proxy_use = ' + str(proxy_use))
             if proxy_use >= proxy_life:
@@ -120,7 +116,6 @@ with open('citation.csv', newline='') as csvfile:
                 sleep(sleep_interval)
                 line_new = sum(1 for line in open(dataFileName))
 
-                # debug 3
                 print('Line count: ' + str(line_new))
 
                 if(line_prev != 0 and line_new != 0 and line_new == line_prev):
@@ -141,14 +136,17 @@ with open('citation.csv', newline='') as csvfile:
             html = f.read()
             f.close()
 
-            # print("Get HTML: " + html)
-            print("HTML get√")
+            if line_prev > 0:
+                print("HTML get √")
+            else:
+                print("no HTML get :(")
+
             matches = re.findall(r'(?<=Cited by )([\d]+)', html)
             print("Match count: " + str(len(matches)))
 
             m = re.search(r'(?<=Cited by )([\d]+)', html)
 
-            citation = 0
+            citation = -100
             if m:
                 citation = m.group()
                 print("#1 Cited By: " + citation + ". Success!")
@@ -159,21 +157,27 @@ with open('citation.csv', newline='') as csvfile:
                 print('html: ' + html)
 
                 # Check if this is nocitation article
-                no_citation_key_index = html.find(no_citation_key)
-                if no_citation_key_index == -1:
-                    print('nocitation key not found too. Running with new proxy')
+                no_citation_key_index1 = html.find(no_citation_key1)
+                no_citation_key_index2 = html.find(no_citation_key2)
+                no_citation_key_index3 = html.find(no_citation_key3)
+                robot_key_index1 = html.find(robot_key1)
+
+
+                if robot_key_index1 != -1:
+                    print('robot key found. Running with new proxy')
+                    getnewProxy()
+
+                elif no_citation_key_index1 != no_citation_key_index2 or no_citation_key_index2 != no_citation_key_index3:
+                    print('nocitation keys are not consistent. Running with new proxy')
+                    getnewProxy()
+
+                elif no_citation_key_index1 == -1:
+                    print('no nocitation keys not found. Running with new proxy')
                     getnewProxy()
                 else:
                     print('This article has no citation. Go next')
                     success = True
                     citation = 0
-
-
-
-        #     # debug - start
-        #     success = True;
-        # break
-        # # debug - end
 
         id = str(id)
         journal = str(journal)
