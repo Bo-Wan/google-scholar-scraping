@@ -8,9 +8,10 @@ from time import sleep
 import subprocess
 # from subprocess import call
 from time import strftime
+import os
 
 # Exclusive!
-previous_pos = 38259
+max_pos = 38259
 sleep_interval = 1
 max_attempt = 10
 
@@ -62,8 +63,13 @@ with open('citation.csv', newline='') as csvfile:
     # Skip first line
     next(csv_lines)
     for row in csv_lines:
-        if int(row[0]) <= previous_pos:
+
+        # Set start
+        if int(row[0]) < 4230 :
             continue
+        # Set end
+        if int(row[0]) > 38259 :
+            exit()
 
         # Main logic
         id = row[0]
@@ -74,6 +80,38 @@ with open('citation.csv', newline='') as csvfile:
 
         dataFileName = 'html-data/' + id + '.html'
         success = False
+
+        # Decide what to run
+        f = open(dataFileName, 'r')
+        html = f.read()
+        f.close()
+
+        bad_rec_flag = False
+
+        robot_key_index1 = html.find(robot_key1)
+        if robot_key_index1 == -1:
+            bad_rec_flag = False
+        else:
+            print('robot key found! ')
+            bad_rec_flag = True
+
+        if not bad_rec_flag:
+            continue
+
+        print('Processing bad rec id: ' + id)
+
+        # Clear HTML
+        print('Deleting data file: ' + dataFileName)
+        os.remove(dataFileName)
+        print('Data file deleted')
+
+        # Clear DB
+        query = 'delete from article where id = ' + id
+        print('Removing db rec. Exec: ' + query)
+        cursor.execute(query)
+        conn.commit()
+        print('Query executed.')
+
 
         # Proxy + cURL until gets citation
         while not success:

@@ -10,7 +10,8 @@ import subprocess
 from time import strftime
 
 # Exclusive!
-previous_pos = 38259
+previous_pos = 0
+ending_pos = 4229
 sleep_interval = 1
 max_attempt = 10
 
@@ -64,6 +65,8 @@ with open('citation.csv', newline='') as csvfile:
     for row in csv_lines:
         if int(row[0]) <= previous_pos:
             continue
+        if int(row[0]) > ending_pos:
+            exit()
 
         # Main logic
         id = row[0]

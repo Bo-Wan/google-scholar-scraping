@@ -13,6 +13,8 @@ robot_key = 'Please show you&#39;re not a robot'
 
 f = open('../html-data/38138.html', 'r')
 html = f.read()
+f.close()
+
 no_citation_key_index = html.find(no_citation_key)
 print(no_citation_key_index)
 if no_citation_key_index == -1:
@@ -26,6 +28,3 @@ if robot_key_index == -1:
     print('robot key not found')
 else:
     print('robot key found! ' + str(no_citation_key_index))
-
-
-f.close()

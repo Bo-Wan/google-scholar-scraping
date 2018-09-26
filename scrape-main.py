@@ -10,7 +10,7 @@ import subprocess
 from time import strftime
 
 # Exclusive!
-previous_pos = 38282
+previous_pos = 38351
 sleep_interval = 1
 max_attempt = 10
 
