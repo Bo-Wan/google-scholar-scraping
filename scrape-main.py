@@ -10,7 +10,7 @@ import subprocess
 from time import strftime
 
 # Exclusive!
-previous_pos = 38259
+previous_pos = 38282
 sleep_interval = 1
 max_attempt = 10
 
@@ -162,12 +162,23 @@ with open('citation.csv', newline='') as csvfile:
                 no_citation_key_index3 = html.find(no_citation_key3)
                 robot_key_index1 = html.find(robot_key1)
 
+                no_citation_flag1 = no_citation_key_index1 != -1
+                no_citation_flag2 = no_citation_key_index2 != -1
+                no_citation_flag3 = no_citation_key_index3 != -1
+
+                # debug
+                print("no_citation_key_index1 = " + str(no_citation_key_index1))
+                print("no_citation_key_index2 = " + str(no_citation_key_index2))
+                print("no_citation_key_index3 = " + str(no_citation_key_index3))
+                print("no_citation_flag1 = " + str(no_citation_flag1))
+                print("no_citation_flag2 = " + str(no_citation_flag2))
+                print("no_citation_flag3 = " + str(no_citation_flag3))
 
                 if robot_key_index1 != -1:
                     print('robot key found. Running with new proxy')
                     getnewProxy()
 
-                elif no_citation_key_index1 != no_citation_key_index2 or no_citation_key_index2 != no_citation_key_index3:
+                elif no_citation_flag1 != no_citation_flag2 or no_citation_flag2 != no_citation_flag3:
                     print('nocitation keys are not consistent. Running with new proxy')
                     getnewProxy()
 
