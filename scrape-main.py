@@ -10,7 +10,7 @@ import subprocess
 from time import strftime
 
 # Exclusive!
-previous_pos = 38351
+previous_pos = 53689
 sleep_interval = 1
 max_attempt = 10
 
@@ -20,6 +20,7 @@ url_post = '&btnG='
 proxy_count = 0
 proxy_life = 5
 
+no_citation_key_absolute = 'did not match any articles.'
 no_citation_key1 = 'Sort by relevance'
 no_citation_key2 = 'Sort by date'
 no_citation_key3 = 'Since 2018'
@@ -157,10 +158,11 @@ with open('citation.csv', newline='') as csvfile:
                 print('html: ' + html)
 
                 # Check if this is nocitation article
+                robot_key_index1 = html.find(robot_key1)
+                no_citation_key_absolute_index = html.find(no_citation_key_absolute)
                 no_citation_key_index1 = html.find(no_citation_key1)
                 no_citation_key_index2 = html.find(no_citation_key2)
                 no_citation_key_index3 = html.find(no_citation_key3)
-                robot_key_index1 = html.find(robot_key1)
 
                 no_citation_flag1 = no_citation_key_index1 != -1
                 no_citation_flag2 = no_citation_key_index2 != -1
@@ -174,10 +176,18 @@ with open('citation.csv', newline='') as csvfile:
                 print("no_citation_flag2 = " + str(no_citation_flag2))
                 print("no_citation_flag3 = " + str(no_citation_flag3))
 
+                # Found text "please show you're not a robot"
                 if robot_key_index1 != -1:
                     print('robot key found. Running with new proxy')
                     getnewProxy()
 
+                # Found text (your search) "didn't match any result"
+                elif no_citation_key_absolute_index != -1:
+                    print('This article is not found')
+                    success = True
+                    citation = -1
+
+                # For cases where typical page show up
                 elif no_citation_flag1 != no_citation_flag2 or no_citation_flag2 != no_citation_flag3:
                     print('nocitation keys are not consistent. Running with new proxy')
                     getnewProxy()

@@ -11,7 +11,8 @@ from time import strftime
 import os
 
 # Exclusive!
-max_pos = 38259
+min_pos = 0
+max_pos = 99999
 sleep_interval = 1
 max_attempt = 10
 
@@ -65,10 +66,10 @@ with open('citation.csv', newline='') as csvfile:
     for row in csv_lines:
 
         # Set start
-        if int(row[0]) < 4230 :
+        if int(row[0]) < min_pos :
             continue
         # Set end
-        if int(row[0]) > 38259 :
+        if int(row[0]) > max_pos :
             exit()
 
         # Main logic
